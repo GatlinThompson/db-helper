@@ -4,8 +4,21 @@ import { signup } from "@/app/server/actions";
 import Input from "@/components/ui/Input";
 import ServerMessage from "@/components/ui/ServerMessage";
 import SubmitButton from "@/components/ui/SubmitButton";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
       <h1 className="text-3xl font-semibold">Signup</h1>

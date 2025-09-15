@@ -1,12 +1,25 @@
 import React from "react";
 import { login } from "@/app/server/actions";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 import Input from "@/components/ui/Input";
 import SubmitButton from "@/components/ui/SubmitButton";
 import ServerMessage from "@/components/ui/ServerMessage";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
       <h1 className="text-3xl font-semibold">Login</h1>

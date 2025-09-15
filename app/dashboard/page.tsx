@@ -1,7 +1,7 @@
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { getServerUser } from "@/utils/get_server_user";
+import { getUserData } from "@/utils/GetUserData";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import EmployeeDashboard from "@/components/employee/EmployeeDashboard";
 import LogoutButton from "@/components/LogoutButton";
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
     redirect("/server/login");
   }
 
-  const userData = await getServerUser();
+  const userData = await getUserData();
 
   return (
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">

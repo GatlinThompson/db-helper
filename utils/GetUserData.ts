@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 
-export async function getServerUser() {
+export async function getUserData() {
   const supabase = await createClient();
   const {
     data: { user },
