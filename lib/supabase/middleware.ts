@@ -44,7 +44,13 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   // Define public routes that don't require authentication
-  const publicRoutes = ["/", "/server/login", "/server/signup"];
+  const publicRoutes = [
+    "/",
+    "/server/login",
+    "/server/signup",
+    "/client/login",
+    "/client/signup",
+  ];
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   if (!user && !isPublicRoute) {

@@ -24,7 +24,9 @@ export default async function DashboardPage() {
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">
       <div className="flex justify-between gap-4 w-full mb-10">
         <h1 className="text-3xl font-semibold">
-          {userData?.role.at(0).toUpperCase() + userData?.role.slice(1)}{" "}
+          {userData?.role
+            ? userData.role.charAt(0).toUpperCase() + userData.role.slice(1)
+            : ""}{" "}
           Dashboard
         </h1>
         <LogoutButton />

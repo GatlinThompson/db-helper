@@ -1,12 +1,9 @@
 import React from "react";
-import { login } from "@/app/server/actions";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-
-import Input from "@/components/ui/Input";
-import SubmitButton from "@/components/ui/SubmitButton";
 import ServerMessage from "@/components/ui/ServerMessage";
+import ClientLoginForm from "@/components/auth/ClientLoginForm";
 import ButtonLink from "@/components/ui/ButtonLink";
 
 export default async function LoginPage() {
@@ -29,21 +26,12 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold">Server Login</h1>
+        <h1 className="text-3xl font-semibold">Client Login</h1>
         <ServerMessage />
-        <form action={login} className="grid gap-4 w-full max-w-sm">
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            placeholder="example@example.com"
-          />
-          <Input label="Password" name="password" type="password" />
-          <SubmitButton>Login</SubmitButton>
-        </form>
+        <ClientLoginForm />
         <p className="text-center">
           Don't have an account?{" "}
-          <Link className="font-semibold underline" href="/server/signup">
+          <Link className="font-semibold underline" href="/client/signup">
             Signup
           </Link>
         </p>

@@ -1,3 +1,4 @@
+import ButtonLink from "@/components/ui/ButtonLink";
 import Link from "next/link";
 
 export default function Home() {
@@ -10,35 +11,16 @@ export default function Home() {
       <div className="grid gap-4 border-t border-black/[.08] dark:border-white/[.145] pt-10 w-full ">
         <h2 className="text-2xl font-semibold">Server Action Auth Examples</h2>
         <div className="flex gap-4">
-          <Link
-            href="/server/login"
-            className="font-semibold px-4 py-2 rounded-md bg-foreground text-background"
-          >
-            Login
-          </Link>
-          <Link
-            href="/server/signup"
-            className="font-semibold px-4 py-2 rounded-md bg-foreground text-background"
-          >
-            Signup
-          </Link>
+          <ButtonLink href="/server/login">Login</ButtonLink>
+
+          <ButtonLink href="/server/signup">Signup</ButtonLink>
         </div>
       </div>
       <div className="grid gap-4 border-t border-black/[.08] dark:border-white/[.145] pt-10 w-full ">
         <h2 className="text-2xl font-semibold">Client Auth Examples</h2>
         <div className="flex gap-4">
-          <Link
-            href="/server/login"
-            className="font-semibold px-4 py-2 rounded-md bg-foreground text-background"
-          >
-            Login
-          </Link>
-          <Link
-            href="/server/signup"
-            className="font-semibold px-4 py-2 rounded-md bg-foreground text-background"
-          >
-            Signup
-          </Link>
+          <ButtonLink href="/client/login">Login</ButtonLink>
+          <ButtonLink href="/client/signup">Signup</ButtonLink>
         </div>
       </div>
     </div>
