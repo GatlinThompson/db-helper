@@ -36,11 +36,11 @@ export default function ClientSignUpForm() {
       } else {
         console.error("Signup failed:", error);
         setMessage(error.message); // Update the message state
+        setLoading(false);
       }
     } catch (error) {
       console.error("Signup request failed:", error);
       setMessage("An error occurred. Please try again later."); // Update the message state
-    } finally {
       setLoading(false);
     }
   };

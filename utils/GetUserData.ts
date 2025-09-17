@@ -14,14 +14,17 @@ export async function getUserData() {
 
   try {
     // Get user data from the database using Prisma
-    const userData = await prisma.profile.findUnique({
+    const userData = await prisma.profiles.findUnique({
       where: {
         user_id: user.id,
       },
       select: {
+        id: true,
+        user_id: true,
         first_name: true,
         last_name: true,
         role: true,
+        user_email: true,
       },
     });
 
@@ -30,8 +33,12 @@ export async function getUserData() {
     }
 
     return {
-      ...userData,
-      email: user.email,
+      id: userData.id,
+      user_id: userData.user_id,
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      role: userData.role,
+      user_email: userData.user_email,
     };
   } catch (error) {
     console.error("Error fetching user data:", error);

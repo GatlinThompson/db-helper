@@ -30,10 +30,10 @@ export default function ClientLoginForm() {
       } else {
         console.error("Login failed:", error);
         setMessage(error.message); // Update the message state
+        setLoading(false);
       }
     } catch (error) {
       console.error("Login request failed:", error);
-    } finally {
       setLoading(false);
     }
   };

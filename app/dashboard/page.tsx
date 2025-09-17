@@ -5,6 +5,8 @@ import { getUserData } from "@/utils/GetUserData";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import EmployeeDashboard from "@/components/employee/EmployeeDashboard";
 import LogoutButton from "@/components/LogoutButton";
+import Link from "next/link";
+import ServerMessage from "@/components/ui/ServerMessage";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -15,13 +17,14 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    redirect("/server/login");
+    redirect("/client/login");
   }
 
   const userData = await getUserData();
 
   return (
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">
+      <ServerMessage />
       <div className="flex justify-between gap-4 w-full mb-10">
         <h1 className="text-3xl font-semibold">
           {userData?.role
@@ -31,8 +34,11 @@ export default async function DashboardPage() {
         </h1>
         <LogoutButton />
       </div>
-      {userData?.role === "admin" && <AdminDashboard />}
-      {userData?.role === "employee" && <EmployeeDashboard />}
+
+      {userData?.role === "admin" && <AdminDashboard user={userData} />}
+      {(userData?.role === "employee" ||
+        userData?.role === "manager" ||
+        userData?.role === "trainer") && <EmployeeDashboard user={userData} />}
     </div>
   );
 }

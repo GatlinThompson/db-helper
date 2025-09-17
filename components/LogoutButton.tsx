@@ -20,20 +20,18 @@ export default function LogoutButton() {
 
       if (response.ok) {
         // Logout successful, redirect to login
-        router.push("/server/login");
+        router.push("/client/login");
         router.refresh(); // Refresh to clear any cached data
       } else {
         const data = await response.json();
         console.error("Logout failed:", data.error);
         // Still redirect even if logout failed
-        router.push("/server/login");
+        router.push("/client/login");
       }
     } catch (error) {
       console.error("Logout request failed:", error);
       // Still redirect even if request failed
-      router.push("/server/login");
-    } finally {
-      setIsLoading(false);
+      router.push("/client/login");
     }
   };
 

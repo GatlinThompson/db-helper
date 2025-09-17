@@ -9,22 +9,24 @@ datasource db {
   schemas   = ["public"]
 }
 
-model Profile {
+
+model profiles {
   id         BigInt @id @default(autoincrement())
   user_id    String @unique @db.Uuid
   first_name String
   last_name  String
   role       Role   @default(employee)
+  user_email String @unique
 
-  @@map("profiles")
   @@schema("public")
 }
 
+
 enum Role {
   employee
-  admin
   manager
   trainer
+  admin
 
   @@schema("public")
 }
