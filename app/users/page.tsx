@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserData } from "@/utils/GetUserData";
 import LogoutButton from "@/components/LogoutButton";
-import { prisma } from "@/lib/prisma";
+
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { UserData } from "@/types/user";
 import { UserTable } from "@/components/users/UserTable";
@@ -26,16 +26,14 @@ export default async function UsersPage() {
     redirect("/dashboard");
   }
 
-  const users = await prisma.profiles.findMany({
-    select: {
-      id: true,
-      user_id: true,
-      first_name: true,
-      last_name: true,
-      role: true,
-      user_email: true,
-    },
-  });
+  const { data: users, error: usersError } = await supabase
+    .from("profiles")
+    .select("*");
+
+  if (usersError) {
+    console.error(usersError);
+    return <div>Error fetching users</div>;
+  }
 
   return (
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">
