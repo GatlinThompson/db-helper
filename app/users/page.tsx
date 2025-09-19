@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { getUserData } from "@/utils/GetUserData";
 import LogoutButton from "@/components/LogoutButton";
 import { prisma } from "@/lib/prisma";
-import CardContainer from "@/components/ui/CardContainer";
+import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { UserData } from "@/types/user";
+import { UserTable } from "@/components/users/UserTable";
 
 export default async function UsersPage() {
   const supabase = await createClient();
@@ -24,6 +25,7 @@ export default async function UsersPage() {
   if (userData?.role !== "admin" && userData?.role !== "manager") {
     redirect("/dashboard");
   }
+
   const users = await prisma.profiles.findMany({
     select: {
       id: true,
@@ -42,16 +44,7 @@ export default async function UsersPage() {
         <LogoutButton />
       </div>
       <div className="w-full grid gap-6">
-        {users?.map((user: UserData) => (
-          <CardContainer key={user.id}>
-            <h3 className="font-semibold mb-2">
-              {user.first_name} {user.last_name}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              {user.user_email}
-            </p>
-          </CardContainer>
-        ))}
+        <UserTable users={users} />
       </div>
     </div>
   );

@@ -1,109 +1,107 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-
-//Function to get user role from database
-async function getUserRole(userId: string): Promise<string | null> {
-  try {
-    console.log("Fetching role for user ID:", userId);
-
-    // Use regular Supabase client (profiles table is publicly readable)
-    const supabase = await createClient();
-
-    // Query the database for user role
-    const { data: userData, error } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", userId)
-      .single();
-
-    console.log("User data from database:", userData);
-    console.log("Query error:", error);
-
-    //Check for errors or no data
-    if (error || !userData) {
-      console.log(
-        "No profile found for user ID:",
-        userId,
-        "Error:",
-        error?.message
-      );
-      return null;
-    }
-
-    // Return user role
-    return userData.role || null;
-  } catch (error) {
-    console.error("Error fetching user role:", error);
-    return null;
-  }
-}
+import { adminRoutes, managerRoutes, publicRoutes } from "@/routes/routes";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  const supabase = await createClient();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            request.cookies.set(name, value)
+          );
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
 
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  // Do not run code between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
 
-  // Define public routes that don't require authentication
-  const publicRoutes = [
-    "/",
-    "/server/login",
-    "/server/signup",
-    "/client/login",
-    "/client/signup",
-  ];
-  // Check if current route is public
-  const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
+  // IMPORTANT: DO NOT REMOVE auth.getUser()
 
-  // If user is not authenticated and trying to access private route, redirect to login
-  if (!user && !isPublicRoute) {
-    // no user, redirect to login page
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user && !publicRoutes.includes(request.nextUrl.pathname)) {
+    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/client/login";
     return NextResponse.redirect(url);
   }
 
-  // Define admin-only routes
-  const adminRoutes = ["/admin"];
+  // IMPORTANT: You *must* return the supabaseResponse object as it is.
+  // If you're creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
 
-  // Check if current route requires admin access
-  const isAdminRoute = adminRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route)
-  );
+  async function getRole() {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("user_id", user?.id)
+      .single();
 
-  // If user is authenticated and trying to access admin route, check role
-  if (user && isAdminRoute) {
-    try {
-      // Get user role from database
-      const userRole = await getUserRole(user.sub);
+    if (error) {
+      console.error(error);
+      return null;
+    }
 
-      if (userRole !== "admin") {
-        // User is not admin, redirect to dashboard with error
-        const url = request.nextUrl.clone();
-        url.pathname = "/dashboard";
-        url.searchParams.set(
-          "message",
-          "Access denied. Admin privileges required."
-        );
-        url.searchParams.set("status", "error");
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      console.error("Error checking user role:", error);
-      // On error, redirect to dashboard
+    return data?.role;
+  }
+
+  const role = await getRole();
+
+  let allowRoles: string[] = [];
+
+  //check if admin route
+  if (adminRoutes.some((route) => request.nextUrl.pathname.startsWith(route))) {
+    allowRoles.push("admin");
+  }
+
+  //check if manager route
+  if (
+    managerRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  ) {
+    allowRoles.push("manager");
+  }
+
+  //check if user has access
+  if (allowRoles.length > 0) {
+    if (!allowRoles.includes(role)) {
+      console.log("Access Denied");
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
-      url.searchParams.set("message", "Unable to verify permissions.");
-      url.searchParams.set("status", "error");
       return NextResponse.redirect(url);
     }
   }
+
+  console.log("Accessed Allowed");
 
   return supabaseResponse;
 }

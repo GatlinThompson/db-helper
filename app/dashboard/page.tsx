@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getUserData } from "@/utils/GetUserData";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import EmployeeDashboard from "@/components/employee/EmployeeDashboard";
+import ManagerDashboard from "@/components/manager/ManagerDashboard";
 import LogoutButton from "@/components/LogoutButton";
 import Link from "next/link";
 import ServerMessage from "@/components/ui/ServerMessage";
@@ -36,9 +37,10 @@ export default async function DashboardPage() {
       </div>
 
       {userData?.role === "admin" && <AdminDashboard user={userData} />}
-      {(userData?.role === "employee" ||
-        userData?.role === "manager" ||
-        userData?.role === "trainer") && <EmployeeDashboard user={userData} />}
+      {userData?.role === "manager" && <ManagerDashboard user={userData} />}
+      {(userData?.role === "employee" || userData?.role === "trainer") && (
+        <EmployeeDashboard user={userData} />
+      )}
     </div>
   );
 }
