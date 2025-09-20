@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Role } from "@prisma/client";
+import { Role } from "@/types/user";
 
 type UserRoleSelectProps = {
   userId: string;

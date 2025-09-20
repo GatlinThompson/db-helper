@@ -7,6 +7,8 @@ import LogoutButton from "@/components/LogoutButton";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { UserData } from "@/types/user";
 import { UserTable } from "@/components/users/UserTable";
+import { prisma } from "@/lib/prisma";
+import { profile } from "console";
 
 export default async function UsersPage() {
   const supabase = await createClient();
@@ -26,14 +28,16 @@ export default async function UsersPage() {
     redirect("/dashboard");
   }
 
-  const { data: users, error: usersError } = await supabase
-    .from("profiles")
-    .select("*");
+  // const { data: users, error: usersError } = await supabase
+  //   .from("profiles")
+  //   .select("*");
 
-  if (usersError) {
-    console.error(usersError);
-    return <div>Error fetching users</div>;
-  }
+  // if (usersError) {
+  //   console.error(usersError);
+  //   return <div>Error fetching users</div>;
+  // }
+
+  const users = await prisma.profiles.findMany();
 
   return (
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">

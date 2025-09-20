@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+export type Role = "admin" | "manager" | "employee" | "trainer";
 
 export type UserData = {
   id: bigint;
