@@ -36,14 +36,13 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
   const { data } = await supabase.auth.getClaims();
-  const session = data?.claims;
-
-  console.log(session);
+  const user = data?.claims?.sub || null;
+  const user_role = data?.claims?.app_metadata?.role;
 
   if (!user && !publicRoutes.includes(request.nextUrl.pathname)) {
     // no user, potentially respond by redirecting the user to the login page
@@ -51,36 +50,6 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/client/login";
     return NextResponse.redirect(url);
   }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
-
-  async function getRole() {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user?.id)
-      .single();
-
-    if (error) {
-      console.error(error);
-      return null;
-    }
-
-    return data?.role;
-  }
-
-  const role = await getRole();
 
   let allowRoles: string[] = [];
 
@@ -98,7 +67,7 @@ export async function updateSession(request: NextRequest) {
 
   //check if user has access
   if (allowRoles.length > 0) {
-    if (!allowRoles.includes(role)) {
+    if (!allowRoles.includes(user_role)) {
       console.log("Access Denied");
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Role } from "@/types/user";
 
 type UserRoleSelectProps = {
-  userId: string;
+  userId: string | undefined | bigint;
   role: Role;
 };
 

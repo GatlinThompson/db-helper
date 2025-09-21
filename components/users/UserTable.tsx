@@ -1,10 +1,9 @@
 import React from "react";
-import { UserData } from "@/types/user";
+import { UsersProps } from "@/types/user";
 import { UserRoleSelect } from "./UserSelect";
-import { getUserData } from "@/utils/GetUserData";
 
 type UserTableProps = {
-  users: UserData[];
+  users: UsersProps[];
 };
 
 export async function UserTable({ users }: UserTableProps) {
@@ -30,12 +29,11 @@ export async function UserTable({ users }: UserTableProps) {
 }
 
 type UserRowProps = {
-  user: UserData;
+  user: UsersProps;
   even: boolean;
 };
 
 export async function UserRow({ user, even }: UserRowProps) {
-  const userData = await getUserData();
   return (
     <tr
       className={`${
@@ -46,9 +44,9 @@ export async function UserRow({ user, even }: UserRowProps) {
       <td>{user.last_name}</td>
       <td>{user.user_email}</td>
 
-      {user && userData?.role === "admin" ? (
+      {user && user?.role === "admin" ? (
         <td>
-          <UserRoleSelect userId={user.user_id} role={user.role} />
+          <UserRoleSelect userId={user.id} role={user.role || "employee"} />
         </td>
       ) : (
         <td>{user.role}</td>
