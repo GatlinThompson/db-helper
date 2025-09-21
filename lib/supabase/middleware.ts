@@ -40,6 +40,11 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data } = await supabase.auth.getClaims();
+  const session = data?.claims;
+
+  console.log(session);
+
   if (!user && !publicRoutes.includes(request.nextUrl.pathname)) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();

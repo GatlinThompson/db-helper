@@ -23,6 +23,22 @@ export default async function DashboardPage() {
 
   const userData = await getUserData();
 
+  const {} = supabase.auth.getClaims();
+
+  async function getRole() {
+    const { data, error } = await supabase.auth.getClaims();
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    return data?.claims;
+  }
+  const aa = getRole();
+
+  console.log(aa);
+
   return (
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">
       <ServerMessage />
