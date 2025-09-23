@@ -1,12 +1,14 @@
 import React from "react";
 import { UsersProps } from "@/types/user";
 import { UserRoleSelect } from "./UserSelect";
+import { Role } from "@/types/user";
 
 type UserTableProps = {
   users: UsersProps[];
+  userRole: Role;
 };
 
-export async function UserTable({ users }: UserTableProps) {
+export async function UserTable({ users, userRole }: UserTableProps) {
   return (
     <div className="w-full grid gap-6">
       <table className="w-full ">
@@ -20,7 +22,12 @@ export async function UserTable({ users }: UserTableProps) {
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <UserRow key={index} user={user} even={index % 2 === 0} />
+            <UserRow
+              key={index}
+              user={user}
+              even={index % 2 === 0}
+              userRole={userRole}
+            />
           ))}
         </tbody>
       </table>
@@ -31,9 +38,10 @@ export async function UserTable({ users }: UserTableProps) {
 type UserRowProps = {
   user: UsersProps;
   even: boolean;
+  userRole: Role;
 };
 
-export async function UserRow({ user, even }: UserRowProps) {
+export async function UserRow({ user, even, userRole }: UserRowProps) {
   return (
     <tr
       className={`${
@@ -44,7 +52,7 @@ export async function UserRow({ user, even }: UserRowProps) {
       <td>{user.last_name}</td>
       <td>{user.user_email}</td>
 
-      {user && user?.role === "admin" ? (
+      {user && userRole === "admin" ? (
         <td>
           <UserRoleSelect userId={user.id} role={user.role || "employee"} />
         </td>

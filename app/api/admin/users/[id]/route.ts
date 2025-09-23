@@ -16,7 +16,7 @@ export async function PUT(
   const { error } = await supabase
     .from("profiles")
     .update({ role })
-    .eq("user_id", id);
+    .eq("id", id);
 
   if (error) {
     console.error("Error updating user:", error);

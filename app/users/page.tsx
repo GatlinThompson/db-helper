@@ -5,6 +5,7 @@ import { getUser } from "@/utils/GetUserData";
 import LogoutButton from "@/components/LogoutButton";
 import { UserTable } from "@/components/users/UserTable";
 import { prisma } from "@/lib/prisma";
+import { Role } from "@/types/user";
 
 export default async function UsersPage() {
   const supabase = await createClient();
@@ -37,7 +38,7 @@ export default async function UsersPage() {
         <LogoutButton />
       </div>
       <div className="w-full grid gap-6">
-        <UserTable users={users} />
+        <UserTable users={users} userRole={user.role as Role} />
       </div>
     </div>
   );
