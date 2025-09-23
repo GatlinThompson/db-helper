@@ -3,29 +3,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
+  //get data
 
-  //Function on supabase to get role counts by grouping
-  const { data, error } = await supabase.rpc("role_counts");
+  try {
+    const users = await prisma.profiles.groupBy({
+      by: ["role"],
+      _count: {
+        role: true,
+      },
+    });
 
-  interface RoleCountRow {
-    role: string;
-    count: number;
-  }
+    //organize data
+    const count = users.map((row) => {
+      return { role: row.role, count: row._count.role };
+    });
 
-  const count = (data as RoleCountRow[]).reduce<Record<string, number>>(
-    (acc, row: RoleCountRow) => {
-      acc[row.role] = row.count;
-      return acc;
-    },
-    {}
-  );
-
-  if (error) {
+    return NextResponse.json(count);
+  } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
-
-  console.log(count);
-  return NextResponse.json(count);
 }

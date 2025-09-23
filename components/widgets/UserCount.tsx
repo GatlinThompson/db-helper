@@ -9,6 +9,8 @@ export default async function UserCount({ user }: UserCountProps) {
   const res = await fetch(
     "http://localhost:3000/api/admin/widgets/users_count"
   );
+
+  console.log(res);
   const data = await res.json();
 
   if (!res.ok) {
@@ -42,10 +44,14 @@ export default async function UserCount({ user }: UserCountProps) {
 
   return (
     <div>
-      <div>Admin: {data.admin}</div>
-      <div>Manager: {data.manager}</div>
-      <div>Employee: {data.employee}</div>
-      <div>Trainer: {data.trainer}</div>
+      {data.map((row: { role: string; count: number }) => {
+        const roleName = row.role.charAt(0).toUpperCase() + row.role.slice(1);
+        return (
+          <div key={row.role}>
+            {roleName}: {row.count}
+          </div>
+        );
+      })}
     </div>
   );
 }

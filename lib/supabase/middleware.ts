@@ -30,16 +30,6 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
-
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims?.sub || null;
   const user_role = data?.claims?.app_metadata?.role;
