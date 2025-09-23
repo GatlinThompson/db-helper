@@ -43,12 +43,15 @@ export default async function UserCount({ user }: UserCountProps) {
   //   }, []);
 
   return (
-    <div>
+    <div className="grid gap-2 grid-cols-2 w-full">
       {data.map((row: { role: string; count: number }) => {
         const roleName = row.role.charAt(0).toUpperCase() + row.role.slice(1);
         return (
           <div key={row.role}>
-            {roleName}: {row.count}
+            <p className="text-lg font-semibold">
+              {roleName}
+              <span className="font-normal">: {row.count}</span>
+            </p>
           </div>
         );
       })}
