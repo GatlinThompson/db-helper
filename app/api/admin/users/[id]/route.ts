@@ -9,14 +9,34 @@ export async function PUT(
   const { id } = await params;
 
   //Get role from request
-  const data = await request.json();
-  const { role } = data;
+  const roles = await request.json();
+  const { role } = roles;
   const supabase = await createClient();
 
-  const { error } = await supabase
+  console.log(id);
+  console.log(role);
+
+  const { data, error } = await supabase
     .from("profiles")
-    .update({ role })
+    .update({ role: role })
     .eq("id", id);
+
+  console.log(data);
+
+  console.log(error);
+
+  async function testData(id: string) {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", id);
+
+    console.log("Updated User", data);
+    console.log("Updated User Error", error);
+  }
+
+  testData(id);
 
   if (error) {
     console.error("Error updating user:", error);
