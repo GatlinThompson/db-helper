@@ -12,7 +12,7 @@ export default function EmployeeDashboard({ user }: DashboardProps) {
         </CardHeader>
         <CardBody>
           You are logged in as an <strong>{user.role}</strong> with email:{" "}
-          {user.user_email}
+          {user.email}
         </CardBody>
       </Card>
     </div>
