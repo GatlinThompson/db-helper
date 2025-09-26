@@ -27,6 +27,17 @@ export default function AdminDashboard({ user }: DashboardProps) {
           <UserCount user={user} />
         </Card>
       </div>
+      <Card>
+        <CardHeader>Training Programs</CardHeader>
+        <div className="flex gap-6">
+          <ButtonLink href="/training-programs">
+            View Training Programs
+          </ButtonLink>
+          <ButtonLink href="/training-programs/create">
+            Create Training Program
+          </ButtonLink>
+        </div>
+      </Card>
     </div>
   );
 }

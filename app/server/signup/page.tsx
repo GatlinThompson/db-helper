@@ -7,6 +7,7 @@ import SubmitButton from "@/components/ui/SubmitButton";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import ButtonLink from "@/components/ui/ButtonLink";
+import PageTitle from "@/components/ui/PageTitle";
 
 export default async function SignupPage() {
   const supabase = await createClient();
@@ -28,7 +29,7 @@ export default async function SignupPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold">Server Signup</h1>
+        <PageTitle> Server Signup</PageTitle>
         <ServerMessage />
         <form action={signup} className="grid gap-4 w-full max-w-sm">
           <Input

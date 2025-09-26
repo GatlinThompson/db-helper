@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import ServerMessage from "@/components/ui/ServerMessage";
 import ClientLoginForm from "@/components/auth/ClientLoginForm";
 import ButtonLink from "@/components/ui/ButtonLink";
+import PageTitle from "@/components/ui/PageTitle";
 
 export default async function LoginPage() {
   const supabase = await createClient();
@@ -26,7 +27,7 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold">Client Login</h1>
+        <PageTitle>lient Login</PageTitle>
         <ServerMessage />
         <ClientLoginForm />
         <p className="text-center">

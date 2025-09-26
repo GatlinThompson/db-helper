@@ -9,9 +9,8 @@ export default async function UserCount({ user }: UserCountProps) {
   const res = await fetch(
     `${process.env.APP_URL}/api/admin/widgets/users_count`,
     {
-      headers: { cookie: cookies().toString() },
+      headers: { cookie: (await cookies()) as unknown as string },
       cache: "no-store",
-      next: { revalidate: 10 },
     }
   );
   const data = await res.json();

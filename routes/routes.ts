@@ -1,4 +1,8 @@
-export const adminRoutes = ["/users"];
+export const adminRoutes = [
+  "/users",
+  "/training-programs/create",
+  "/training-programs/edit",
+];
 export const managerRoutes = ["/users"];
 
 export const publicRoutes = [

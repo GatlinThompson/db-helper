@@ -7,6 +7,7 @@ import ManagerDashboard from "@/components/manager/ManagerDashboard";
 import LogoutButton from "@/components/LogoutButton";
 
 import ServerMessage from "@/components/ui/ServerMessage";
+import PageTitle from "@/components/ui/PageTitle";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -18,12 +19,12 @@ export default async function DashboardPage() {
     <div className="flex flex-col gap-4 pt-20 items-center min-h-screen w-full max-w-3xl mx-auto">
       <ServerMessage />
       <div className="flex justify-between gap-4 w-full mb-10">
-        <h1 className="text-3xl font-semibold">
+        <PageTitle>
           {user.role
             ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
             : ""}{" "}
           Dashboard
-        </h1>
+        </PageTitle>
         <LogoutButton />
       </div>
 

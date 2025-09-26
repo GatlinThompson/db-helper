@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import ClientSignUpForm from "@/components/auth/ClientSignUpForm";
 import ButtonLink from "@/components/ui/ButtonLink";
+import PageTitle from "@/components/ui/PageTitle";
 
 export default async function SignupPage() {
   const supabase = await createClient();
@@ -25,8 +26,7 @@ export default async function SignupPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold">Client Signup</h1>
-
+        <PageTitle>Client Signup</PageTitle>
         <ClientSignUpForm />
         <p className="text-center">
           Already have an account?{" "}
