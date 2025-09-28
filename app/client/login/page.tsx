@@ -27,7 +27,7 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <PageTitle>lient Login</PageTitle>
+        <PageTitle>Client Login</PageTitle>
         <ServerMessage />
         <ClientLoginForm />
         <p className="text-center">
