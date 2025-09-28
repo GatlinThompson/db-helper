@@ -2,6 +2,8 @@ import React from "react";
 import { DashboardProps } from "@/types/user";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import Link from "next/link";
+import UserCount from "../widgets/UserCount";
+import ButtonLink from "../ui/ButtonLink";
 export default function AdminDashboard({ user }: DashboardProps) {
   return (
     <div className="w-full grid gap-6">
@@ -11,17 +13,31 @@ export default function AdminDashboard({ user }: DashboardProps) {
         </CardHeader>
         <CardBody>
           You are logged in as an <strong>{user.role}</strong> with email:{" "}
-          {user.user_email}
+          {user.email}
         </CardBody>
       </Card>
       <div className="grid grid-cols-2 gap-6">
-        <Link href="/users">
-          <Card>
-            <CardHeader>Users</CardHeader>
-            <CardBody>Check out the users!</CardBody>
-          </Card>
-        </Link>
+        <Card>
+          <CardHeader>Users</CardHeader>
+          <ButtonLink href="/users">View Users</ButtonLink>
+        </Card>
+
+        <Card>
+          <CardHeader>User Count</CardHeader>
+          <UserCount user={user} />
+        </Card>
       </div>
+      <Card>
+        <CardHeader>Training Programs</CardHeader>
+        <div className="flex gap-6">
+          <ButtonLink href="/training-programs">
+            View Training Programs
+          </ButtonLink>
+          <ButtonLink href="/training-programs/create">
+            Create Training Program
+          </ButtonLink>
+        </div>
+      </Card>
     </div>
   );
 }

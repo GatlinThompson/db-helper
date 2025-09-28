@@ -29,7 +29,7 @@ model profiles {
   first_name String
   last_name  String
   role       Role   @default(employee)
-  user_email String @unique
+  user_email String @unique @map("email")
   users      users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id], map: "idx_profiles_user_id")

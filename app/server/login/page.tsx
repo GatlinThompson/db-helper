@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
+import PageTitle from "@/components/ui/PageTitle";
 import Input from "@/components/ui/Input";
 import SubmitButton from "@/components/ui/SubmitButton";
 import ServerMessage from "@/components/ui/ServerMessage";
@@ -29,7 +30,7 @@ export default async function LoginPage() {
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold">Server Login</h1>
+        <PageTitle>Server Login</PageTitle>
         <ServerMessage />
         <form action={login} className="grid gap-4 w-full max-w-sm">
           <Input

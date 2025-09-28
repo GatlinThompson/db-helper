@@ -1,30 +1,22 @@
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { getUserData } from "@/utils/GetUserData";
+import { getUser } from "@/utils/GetUserData";
 import LogoutButton from "@/components/LogoutButton";
-
-import { Card, CardBody, CardHeader } from "@/components/ui/Card";
-import { UserData } from "@/types/user";
 import { UserTable } from "@/components/users/UserTable";
 import { prisma } from "@/lib/prisma";
-import { profile } from "console";
+import { Role } from "@/types/user";
 
 export default async function UsersPage() {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
-  if (error || !user) {
+  if (!user) {
     redirect("/client/login");
   }
 
-  const userData = await getUserData();
-
-  if (userData?.role !== "admin" && userData?.role !== "manager") {
+  if (user?.role !== "admin" && user?.role !== "manager") {
     redirect("/dashboard");
   }
 
@@ -46,7 +38,7 @@ export default async function UsersPage() {
         <LogoutButton />
       </div>
       <div className="w-full grid gap-6">
-        <UserTable users={users} />
+        <UserTable users={users} userRole={user.role as Role} />
       </div>
     </div>
   );
