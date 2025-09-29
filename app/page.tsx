@@ -1,4 +1,4 @@
-import ButtonLink from "@/components/ui/ButtonLink";
+import ButtonLink from "@/app/_components/layout/ButtonLink";
 import Link from "next/link";
 
 export default function Home() {
